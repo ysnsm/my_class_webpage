@@ -1,5 +1,5 @@
 // 班级主页主逻辑 - 从 Worker API 获取配置
-const WORKER_URL = 'https://mycw-config.ysnsm2899.workers.dev/api/config';  // ⚠️ 替换为你的 Worker 实际地址
+const WORKER_URL = 'https://api.mycw.ysnsm2899.ggff.net/api/config';  // ⚠️ 替换为你的 Worker 实际地址
 
 let currentConfig = null;
 
