@@ -1,0 +1,1 @@
+请将班级照片放在此文件夹，例如 class-photo.jpg, lotus-festival.jpg 等

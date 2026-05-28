@@ -1,0 +1,26 @@
+{
+  "className": "红谷一小六（13）班",
+  "classAlias": "菡萏班",
+  "classSlogan": "灼灼荷花瑞，亭亭出水中",
+  "teacherMessage": "愿你们如清荷，不染纤尘，中通外直，香远益清。",
+  "studentCount": 46,
+  "teacherCount": 12,
+  "bgmUrl": "assets/audio/class-bgm.mp3",
+  "aboutStory": "红谷一小六（13）班又名“菡萏班”，菡萏即荷花花苞，象征纯洁与希望。46朵小荷在老师们的浇灌下茁壮成长。",
+  "members": [
+    { "name": "林清菡", "role": "班长", "bio": "校优秀学生干部，有担当", "icon": "fa-crown" },
+    { "name": "周子荷", "role": "学习委员", "bio": "作文大赛省一等奖", "icon": "fa-book" },
+    { "name": "罗逸飞", "role": "体育健将", "bio": "校田径队主力", "icon": "fa-futbol" },
+    { "name": "叶之夏", "role": "文艺部长", "bio": "舞蹈荷花奖获得者", "icon": "fa-palette" }
+  ],
+  "honors": [
+    { "title": "红谷滩区优秀班集体", "desc": "2023-2024学年", "icon": "fa-trophy" },
+    { "title": "校艺术节合唱特等奖", "desc": "曲目《荷花谣》", "icon": "fa-music" },
+    { "title": "书香班级称号", "desc": "人均阅读量全校第一", "icon": "fa-book-open" }
+  ],
+  "gallery": [
+    { "type": "image", "url": "assets/images/lotus-festival.jpg", "caption": "荷花节班级展示" },
+    { "type": "image", "url": "assets/images/class-meeting.jpg", "caption": "主题班会" },
+    { "type": "video", "url": "assets/video/graduation-memory.mp4", "caption": "六年级成长记忆" }
+  ]
+}

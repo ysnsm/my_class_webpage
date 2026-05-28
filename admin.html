@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>菡萏班 · 后台配置管理</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .admin-container { max-width: 1200px; margin: 100px auto 60px; padding: 0 28px; }
+        .admin-card { background: white; border-radius: 32px; padding: 32px; margin-bottom: 40px; box-shadow: 0 12px 28px rgba(0,0,0,0.05); border: 1px solid #f0e4d8; }
+        .form-group { margin-bottom: 24px; }
+        label { font-weight: 600; display: block; margin-bottom: 8px; color: #4b3e32; }
+        input, textarea, select { width: 100%; padding: 12px 16px; border-radius: 20px; border: 1px solid #e6d9ce; font-family: inherit; background: #fefaf5; }
+        textarea { min-height: 80px; }
+        .btn-group { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 20px; }
+        .btn { padding: 10px 24px; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; background: #f0e4d8; transition: 0.2s; }
+        .btn-primary { background: #E88D67; color: white; }
+        .btn-primary:hover { background: #cf7350; }
+        .btn-outline { background: transparent; border: 1px solid #d4c3b2; }
+        .member-item, .honor-item, .gallery-item { background: #fef8f2; padding: 16px; border-radius: 20px; margin-bottom: 16px; }
+        .array-controls { display: flex; gap: 8px; margin-top: 8px; }
+        hr { margin: 28px 0; border-color: #efe2d6; }
+        h3 { margin-bottom: 18px; color: #a5532f; }
+        .info-badge { background: #e5f6e9; padding: 8px 16px; border-radius: 40px; font-size: 0.8rem; display: inline-block; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<div class="navbar" style="position: sticky;"><div class="nav-container"><div class="logo"><h2>⚙️ 管理后台</h2><p>菡萏班配置中心</p></div><ul class="nav-links"><li><a href="index.html" target="_blank">🏠 访问主页</a></li><li><a href="#" id="exportConfigBtn">📥 导出JSON</a></li></ul></div></div>
+<div class="admin-container" id="adminApp">
+    <div class="info-badge"><i class="fas fa-save"></i> 编辑以下信息，点击「保存配置到浏览器」预览，或导出JSON文件覆盖 config.json</div>
+    <div class="admin-card"><h2><i class="fas fa-school"></i> 基础信息</h2><div class="form-group"><label>班级全称</label><input type="text" id="className" placeholder="红谷一小六(13)班"></div><div class="form-group"><label>班级别名（菡萏班）</label><input type="text" id="classAlias" placeholder="菡萏班"></div><div class="form-group"><label>班级口号</label><input type="text" id="classSlogan" placeholder="含苞待放，志在凌云"></div><div class="form-group"><label>班主任寄语</label><textarea id="teacherMessage"></textarea></div><div class="form-group"><label>班级人数</label><input type="number" id="studentCount"></div><div class="form-group"><label>教师人数</label><input type="number" id="teacherCount"></div><div class="form-group"><label>背景音乐URL(音效文件夹)</label><input type="text" id="bgmUrl" placeholder="assets/audio/class-bgm.mp3"></div></div>
+    <div class="admin-card"><h3><i class="fas fa-users"></i> 成员风采 (可增删)</h3><div id="membersList"></div><button class="btn btn-outline" id="addMemberBtn"><i class="fas fa-plus"></i> 添加成员</button></div>
+    <div class="admin-card"><h3><i class="fas fa-trophy"></i> 荣誉奖项</h3><div id="honorList"></div><button class="btn btn-outline" id="addHonorBtn"><i class="fas fa-plus"></i> 添加荣誉</button></div>
+    <div class="admin-card"><h3><i class="fas fa-images"></i> 精彩瞬间 (图片/视频)</h3><div id="galleryList"></div><button class="btn btn-outline" id="addGalleryBtn"><i class="fas fa-plus"></i> 添加媒体项</button><p class="hint" style="font-size:12px; margin-top:12px;">提示：type为image或video，视频请放置于assets/video/，图片放置于assets/images/或外部链接</p></div>
+    <div class="btn-group"><button class="btn btn-primary" id="saveToLocalBtn">💾 保存配置到浏览器 (立即预览)</button><button class="btn" id="resetDefaultBtn">↺ 重置默认配置</button></div>
+</div>
+<script src="js/admin.js"></script>
+</body>
+</html>
