@@ -74,6 +74,15 @@
         .member-item, .honor-item, .gallery-item { background: #fef8f2; padding: 16px; border-radius: 20px; margin-bottom: 16px; }
         .info-badge { background: #e5f6e9; padding: 8px 16px; border-radius: 40px; font-size: 0.8rem; display: inline-block; margin-bottom: 20px; }
         .hint { font-size: 12px; margin-top: 12px; color: #8f8576; }
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #d4c3b2;
+            color: #a5532f;
+            margin-left: 15px;
+        }
+        .logout-btn:hover {
+            background: #f0e4d8;
+        }
     </style>
 </head>
 <body>
@@ -96,6 +105,7 @@
             <ul class="nav-links">
                 <li><a href="index.html" target="_blank">🏠 访问主页</a></li>
                 <li><a href="#" id="exportConfigBtn">📥 导出JSON</a></li>
+                <li><button id="logoutBtn" class="btn logout-btn">🚪 退出登录</button></li>
             </ul>
         </div>
     </div>
@@ -136,13 +146,13 @@
 
 <script>
     // ------------------------------------------------------------------
-    // 所有逻辑统一在此，无外部依赖（除了API调用）
+    // 所有逻辑统一在此，记住登录状态（localStorage 存储，1小时有效）
     // ------------------------------------------------------------------
     const API_BASE = 'https://api.mycw.ysnsm2899.ggff.net/api';
     let currentToken = null;
     let configData = null;
 
-    // 默认配置（与你 Worker 中的默认配置保持一致，修复了字段名）
+    // 默认配置
     const defaultConfig = {
         className: "红谷一小六（13）班",
         classAlias: "菡萏班",
@@ -312,6 +322,20 @@
         }
     }
 
+    async function verifyPassword(password) {
+        try {
+            const resp = await fetch(`${API_BASE}/auth`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+            const data = await resp.json();
+            return data.success === true;
+        } catch {
+            return false;
+        }
+    }
+
     // ----- 初始化后台 -----
     async function initAdmin(token) {
         currentToken = token;
@@ -351,16 +375,13 @@
             };
         }
 
-        // 重置默认配置按钮（修复版）
+        // 重置默认配置
         const resetBtn = document.getElementById('resetDefaultBtn');
         if (resetBtn) {
             resetBtn.onclick = () => {
                 if (confirm('⚠️ 确定要重置所有配置为默认值吗？未保存的更改将会丢失。')) {
-                    // 深拷贝默认配置
                     configData = JSON.parse(JSON.stringify(defaultConfig));
-                    // 重新填充表单
                     fillForm();
-                    // 提示用户需要保存
                     alert('已恢复默认配置。请点击“保存配置到云端”使更改生效。');
                 }
             };
@@ -407,44 +428,106 @@
                 renderGallery();
             };
         }
+
+        // 退出登录
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.onclick = () => {
+                localStorage.removeItem('admin_session');
+                sessionStorage.clear();
+                location.reload();
+            };
+        }
     }
 
-    // ----- 登录逻辑 -----
+    // ----- 登录与自动登录逻辑 -----
     const loginOverlay = document.getElementById('loginOverlay');
     const adminContent = document.getElementById('adminContent');
     const loginBtn = document.getElementById('loginBtn');
     const adminPassword = document.getElementById('adminPassword');
     const loginError = document.getElementById('loginError');
 
-    async function handleLogin() {
+    // 保存登录信息到 localStorage（1小时有效）
+    function saveSession(password) {
+        const sessionData = {
+            token: password,
+            expire: Date.now() + 60 * 60 * 1000  // 1小时后过期
+        };
+        localStorage.setItem('admin_session', JSON.stringify(sessionData));
+    }
+
+    function getSavedPassword() {
+        const raw = localStorage.getItem('admin_session');
+        if (!raw) return null;
+        try {
+            const session = JSON.parse(raw);
+            if (session.expire && session.expire > Date.now()) {
+                return session.token;
+            } else {
+                localStorage.removeItem('admin_session');
+                return null;
+            }
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async function attemptAutoLogin() {
+        const savedPwd = getSavedPassword();
+        if (!savedPwd) return false;
+        const isValid = await verifyPassword(savedPwd);
+        if (isValid) {
+            currentToken = savedPwd;
+            loginOverlay.style.display = 'none';
+            adminContent.style.display = 'block';
+            await initAdmin(savedPwd);
+            return true;
+        } else {
+            localStorage.removeItem('admin_session');
+            return false;
+        }
+    }
+
+    async function manualLogin(password) {
+        const isValid = await verifyPassword(password);
+        if (isValid) {
+            saveSession(password);
+            currentToken = password;
+            loginOverlay.style.display = 'none';
+            adminContent.style.display = 'block';
+            await initAdmin(password);
+        } else {
+            loginError.innerText = '密码错误，请重试';
+        }
+    }
+
+    // 页面加载时首先尝试自动登录
+    (async function() {
+        const autoSuccess = await attemptAutoLogin();
+        if (!autoSuccess) {
+            loginOverlay.style.display = 'flex';
+            adminContent.style.display = 'none';
+        }
+    })();
+
+    // 绑定手动登录事件
+    loginBtn.addEventListener('click', async () => {
         const pwd = adminPassword.value;
         if (!pwd) {
             loginError.innerText = '请输入密码';
             return;
         }
-        try {
-            const resp = await fetch(`${API_BASE}/auth`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: pwd })
-            });
-            const data = await resp.json();
-            if (data.success) {
-                loginOverlay.style.display = 'none';
-                adminContent.style.display = 'block';
-                await initAdmin(pwd);
-            } else {
-                loginError.innerText = '密码错误，请重试';
+        await manualLogin(pwd);
+    });
+    adminPassword.addEventListener('keypress', async (e) => {
+        if (e.key === 'Enter') {
+            const pwd = adminPassword.value;
+            if (!pwd) {
+                loginError.innerText = '请输入密码';
+                return;
             }
-        } catch (err) {
-            loginError.innerText = '网络错误，无法验证';
-            console.error(err);
+            await manualLogin(pwd);
         }
-    }
-
-    loginBtn.addEventListener('click', handleLogin);
-    adminPassword.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleLogin();
     });
 </script>
 </body>
