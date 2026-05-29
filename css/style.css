@@ -36,3 +36,87 @@ footer { background: #fef7ef; padding: 40px 0 30px; border-top: 1px solid #f0e3d
 .scroll-top { position: fixed; bottom: 28px; right: 28px; background: #E88D67; width: 48px; height: 48px; border-radius: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: 0.2s; color: white; }
 .scroll-top.show { opacity: 1; }
 @media (max-width: 768px) { .hero-text h1 { font-size: 2rem; } .section-title { font-size: 1.8rem; } .nav-container { flex-direction: column; gap: 12px; } }
+
+/* ========== 管理后台专属样式 ========== */
+.admin-container {
+    max-width: 1200px;
+    margin: 100px auto 60px;
+    padding: 0 28px;
+}
+.admin-card {
+    background: white;
+    border-radius: 32px;
+    padding: 32px;
+    margin-bottom: 40px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+    border: 1px solid #f0e4d8;
+}
+.form-group {
+    margin-bottom: 24px;
+}
+.form-group label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    color: #4b3e32;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 20px;
+    border: 1px solid #e6d9ce;
+    font-family: inherit;
+    background: #fefaf5;
+}
+.form-group textarea {
+    min-height: 80px;
+}
+.btn-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.btn {
+    padding: 10px 24px;
+    border-radius: 40px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    background: #f0e4d8;
+    transition: 0.2s;
+}
+.btn-primary {
+    background: #E88D67;
+    color: white;
+}
+.btn-primary:hover {
+    background: #cf7350;
+}
+.btn-outline {
+    background: transparent;
+    border: 1px solid #d4c3b2;
+}
+.member-item,
+.honor-item,
+.gallery-item {
+    background: #fef8f2;
+    padding: 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+}
+.info-badge {
+    background: #e5f6e9;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+.hint {
+    font-size: 12px;
+    margin-top: 12px;
+    color: #8f8576;
+}
