@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>上传班级图片</title>
+</head>
+<body>
+    <h2>上传图片到班级仓库</h2>
+    <input type="file" id="fileInput" accept="image/*">
+    <button id="uploadBtn">上传</button>
+    <div id="result"></div>
+
+    <script>
+        const API_BASE = 'https://api.mycw.ysnsm2899.ggff.net/api';
+        document.getElementById('uploadBtn').onclick = async () => {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) { alert('请选择文件'); return; }
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64 = e.target.result.split(',')[1];
+                const pwd = prompt('请输入管理员密码');
+                const resp = await fetch(`${API_BASE}/upload`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Admin-Token': pwd },
+                    body: JSON.stringify({ fileName: file.name, fileBase64: base64, commitMessage: `上传 ${file.name}` })
+                });
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    document.getElementById('result').innerHTML = `<p>✅ 上传成功！<br>地址：<a href="${data.fileUrl}" target="_blank">${data.fileUrl}</a></p>`;
+                } else {
+                    document.getElementById('result').innerHTML = `<p>❌ 失败：${data.error}</p>`;
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+    </script>
+</body>
+</html>
